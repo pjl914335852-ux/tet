@@ -1,0 +1,2575 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TTE NETWORK | Enterprise-Grade Blockchain Infrastructure</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #0A0A0F;
+            --secondary: #2A2A3C;
+            --accent: #7B61FF;
+            --accent-gradient: linear-gradient(135deg, #7B61FF 0%, #00E0FF 100%);
+            --accent-glow: 0 0 30px rgba(123, 97, 255, 0.5);
+            --text-primary: #FFFFFF;
+            --text-secondary: #A0A0B0;
+            --text-tertiary: #6A6A80;
+            --success: #00E0A0;
+            --warning: #FFB74D;
+            --error: #FF5C87;
+            --card-bg: rgba(20, 20, 30, 0.8);
+            --border: rgba(255, 255, 255, 0.08);
+            --border-highlight: rgba(123, 97, 255, 0.3);
+            --bg-gradient: radial-gradient(ellipse at 30% 20%, rgba(123, 97, 255, 0.1) 0%, transparent 60%),
+                          radial-gradient(ellipse at 70% 80%, rgba(0, 224, 255, 0.1) 0%, transparent 60%);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        html {
+            scroll-behavior: smooth;
+        }
+        
+        body {
+            background-color: #0A0A0F;
+            color: var(--text-primary);
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            line-height: 1.6;
+            font-weight: 400;
+            overflow-x: hidden;
+            position: relative;
+        }
+        
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--bg-gradient);
+            z-index: -2;
+            opacity: 0.5;
+        }
+        
+        /* 网格背景 */
+        .grid-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(rgba(123, 97, 255, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(123, 97, 255, 0.03) 1px, transparent 1px);
+            background-size: 80px 80px;
+            z-index: -1;
+            opacity: 0.3;
+        }
+        
+        /* 导航栏 */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background: rgba(10, 10, 15, 0.95);
+            backdrop-filter: blur(30px);
+            border-bottom: 1px solid var(--border);
+            z-index: 1000;
+            padding: 1.2rem 0;
+            box-shadow: 0 5px 30px rgba(0, 0, 0, 0.5);
+        }
+        
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .logo-icon {
+            width: 46px;
+            height: 46px;
+            background: var(--accent-gradient);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            font-size: 20px;
+            color: white;
+            box-shadow: var(--accent-glow);
+        }
+        
+        .logo-text {
+            font-size: 1.5rem;
+            font-weight: 800;
+            background: var(--accent-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: -0.5px;
+        }
+        
+        .nav-menu {
+            display: flex;
+            align-items: center;
+            gap: 2.5rem;
+        }
+        
+        .nav-link {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.95rem;
+            transition: all 0.3s;
+            position: relative;
+            padding: 0.5rem 0;
+            letter-spacing: 0.2px;
+        }
+        
+        .nav-link:hover {
+            color: var(--text-primary);
+        }
+        
+        .nav-link.active {
+            color: var(--text-primary);
+        }
+        
+        .nav-link.active::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: var(--accent-gradient);
+            border-radius: 2px;
+        }
+        
+        .nav-actions {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+        }
+        
+        /* 语言选择器 */
+        .language-selector {
+            position: relative;
+        }
+        
+        .lang-trigger {
+            background: rgba(20, 20, 30, 0.8);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            width: 52px;
+            height: 52px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-primary);
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 1.2rem;
+        }
+        
+        .lang-trigger:hover {
+            background: rgba(123, 97, 255, 0.1);
+            border-color: var(--border-highlight);
+            transform: translateY(-2px);
+        }
+        
+        .lang-dropdown {
+            position: absolute;
+            top: 65px;
+            right: 0;
+            background: rgba(20, 20, 30, 0.98);
+            backdrop-filter: blur(30px);
+            border-radius: 16px;
+            border: 1px solid var(--border);
+            width: 160px;
+            padding: 0.5rem;
+            display: none;
+            z-index: 100;
+            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.5);
+            overflow: hidden;
+        }
+        
+        .lang-dropdown.show {
+            display: block;
+            animation: slideDown 0.2s ease-out;
+        }
+        
+        @keyframes slideDown {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .lang-option {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 1rem;
+            color: var(--text-secondary);
+            cursor: pointer;
+            border-radius: 12px;
+            transition: all 0.2s;
+        }
+        
+        .lang-option:hover {
+            background: rgba(123, 97, 255, 0.1);
+            color: var(--text-primary);
+        }
+        
+        .lang-option.active {
+            background: rgba(123, 97, 255, 0.15);
+            color: var(--text-primary);
+        }
+        
+        .lang-flag {
+            width: 24px;
+            height: 18px;
+            border-radius: 3px;
+            overflow: hidden;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+        
+        .flag-en {
+            background: linear-gradient(to bottom, #012169 0%, #012169 33%, #C8102E 33%, #C8102E 66%, white 66%, white 100%);
+        }
+        
+        .flag-cn {
+            background: linear-gradient(to bottom, #DE2910 0%, #DE2910 50%, #FFDE00 50%, #FFDE00 100%);
+        }
+        
+        .wallet-btn {
+            background: var(--accent-gradient);
+            color: white;
+            border: none;
+            padding: 0.9rem 2.2rem;
+            border-radius: 14px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            box-shadow: var(--accent-glow);
+            letter-spacing: 0.3px;
+        }
+        
+        .wallet-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(123, 97, 255, 0.6);
+        }
+        
+        /* 主容器 */
+        .main-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            padding-top: 100px;
+        }
+        
+        /* 仪表板标题 */
+        .dashboard-header {
+            margin-bottom: 4rem;
+            text-align: center;
+            position: relative;
+        }
+        
+        .dashboard-header::before {
+            content: '';
+            position: absolute;
+            top: -50px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 300px;
+            height: 300px;
+            background: radial-gradient(circle, rgba(123, 97, 255, 0.2) 0%, transparent 70%);
+            z-index: -1;
+            opacity: 0.5;
+        }
+        
+        .dashboard-header h1 {
+            font-size: 3.5rem;
+            font-weight: 800;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(135deg, #FFFFFF 0%, var(--accent) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            line-height: 1.1;
+            letter-spacing: -0.5px;
+            font-family: 'Space Grotesk', sans-serif;
+        }
+        
+        .dashboard-header p {
+            font-size: 1.3rem;
+            color: var(--text-secondary);
+            max-width: 700px;
+            margin: 0 auto;
+            line-height: 1.7;
+        }
+        
+        /* 区块链状态卡片 */
+        .chain-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-bottom: 4rem;
+        }
+        
+        .stat-card {
+            background: var(--card-bg);
+            border-radius: 24px;
+            padding: 2.2rem;
+            border: 1px solid var(--border);
+            transition: all 0.4s;
+            backdrop-filter: blur(20px);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--accent-gradient);
+            opacity: 0;
+            transition: opacity 0.4s;
+            z-index: -1;
+        }
+        
+        .stat-card:hover {
+            border-color: var(--border-highlight);
+            transform: translateY(-8px);
+            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.4);
+        }
+        
+        .stat-card:hover::before {
+            opacity: 0.05;
+        }
+        
+        .stat-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.8rem;
+        }
+        
+        .stat-title {
+            font-size: 0.9rem;
+            color: var(--text-tertiary);
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .stat-icon {
+            width: 40px;
+            height: 40px;
+            background: rgba(123, 97, 255, 0.1);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--accent);
+        }
+        
+        .stat-change {
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-weight: 600;
+        }
+        
+        .positive {
+            color: var(--success);
+        }
+        
+        .negative {
+            color: var(--error);
+        }
+        
+        .stat-value {
+            font-size: 2.8rem;
+            font-weight: 800;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+            font-family: 'Space Grotesk', sans-serif;
+            letter-spacing: -1px;
+        }
+        
+        .stat-subtitle {
+            color: var(--text-secondary);
+            font-size: 1rem;
+        }
+        
+        /* 标签页导航 */
+        .tabs-nav {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 3rem;
+            background: rgba(20, 20, 30, 0.6);
+            border-radius: 20px;
+            padding: 0.5rem;
+            width: fit-content;
+            border: 1px solid var(--border);
+            backdrop-filter: blur(10px);
+        }
+        
+        .tab-btn {
+            padding: 1.2rem 2.5rem;
+            background: transparent;
+            border: none;
+            color: var(--text-secondary);
+            font-weight: 600;
+            font-size: 1rem;
+            border-radius: 16px;
+            cursor: pointer;
+            transition: all 0.3s;
+            letter-spacing: 0.3px;
+        }
+        
+        .tab-btn:hover {
+            color: var(--text-primary);
+            background: rgba(255, 255, 255, 0.05);
+        }
+        
+        .tab-btn.active {
+            background: rgba(123, 97, 255, 0.15);
+            color: var(--text-primary);
+            box-shadow: 0 5px 20px rgba(123, 97, 255, 0.2);
+        }
+        
+        /* 跨链桥卡片 */
+        .bridge-card {
+            background: var(--card-bg);
+            border-radius: 28px;
+            border: 1px solid var(--border);
+            overflow: hidden;
+            margin-bottom: 4rem;
+            backdrop-filter: blur(20px);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+        }
+        
+        .card-header {
+            padding: 2rem 2.5rem;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(10, 10, 15, 0.5);
+        }
+        
+        .card-title {
+            font-size: 1.6rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            color: var(--text-primary);
+        }
+        
+        .card-title i {
+            color: var(--accent);
+            font-size: 1.4rem;
+        }
+        
+        .card-actions {
+            display: flex;
+            gap: 0.8rem;
+        }
+        
+        .action-btn {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            width: 48px;
+            height: 48px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-primary);
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .action-btn:hover {
+            background: rgba(123, 97, 255, 0.2);
+            border-color: var(--border-highlight);
+            transform: translateY(-2px);
+        }
+        
+        /* 跨链桥内容 */
+        .bridge-content {
+            padding: 2.5rem;
+        }
+        
+        .bridge-container {
+            display: grid;
+            grid-template-columns: 1fr auto 1fr;
+            gap: 2.5rem;
+            align-items: center;
+        }
+        
+        .chain-section {
+            background: rgba(10, 10, 15, 0.7);
+            border-radius: 24px;
+            padding: 2.2rem;
+            border: 1px solid var(--border);
+            transition: all 0.4s;
+            position: relative;
+        }
+        
+        .chain-section:hover {
+            border-color: var(--border-highlight);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
+        }
+        
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.8rem;
+        }
+        
+        .section-label {
+            font-size: 0.9rem;
+            color: var(--text-tertiary);
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            font-weight: 600;
+        }
+        
+        .balance {
+            color: var(--success);
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+        
+        .chain-selector {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+            margin-bottom: 2.2rem;
+        }
+        
+        .chain-icon {
+            width: 68px;
+            height: 68px;
+            border-radius: 18px;
+            background: rgba(123, 97, 255, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            color: var(--text-primary);
+            border: 1px solid var(--border-highlight);
+            box-shadow: 0 10px 30px rgba(123, 97, 255, 0.2);
+        }
+        
+        .chain-details {
+            flex-grow: 1;
+        }
+        
+        .chain-name {
+            font-size: 1.4rem;
+            font-weight: 700;
+            margin-bottom: 6px;
+            color: var(--text-primary);
+        }
+        
+        .chain-address {
+            font-size: 0.95rem;
+            color: var(--text-secondary);
+            font-family: 'JetBrains Mono', monospace;
+        }
+        
+        .chain-actions {
+            display: flex;
+            gap: 0.6rem;
+        }
+        
+        .chain-action-btn {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            width: 48px;
+            height: 48px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-primary);
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .chain-action-btn:hover {
+            background: rgba(123, 97, 255, 0.2);
+            border-color: var(--border-highlight);
+        }
+        
+        .amount-input-container {
+            margin-bottom: 1.8rem;
+        }
+        
+        .amount-label {
+            display: block;
+            margin-bottom: 1rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            font-size: 1.1rem;
+        }
+        
+        .amount-input-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+        }
+        
+        .amount-input {
+            flex-grow: 1;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 1.5rem;
+            color: var(--text-primary);
+            font-size: 2.2rem;
+            font-weight: 700;
+            font-family: 'Space Grotesk', sans-serif;
+            outline: none;
+            transition: all 0.3s;
+        }
+        
+        .amount-input:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(123, 97, 255, 0.2);
+        }
+        
+        .amount-input::placeholder {
+            color: rgba(255, 255, 255, 0.2);
+        }
+        
+        .token-selector {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: rgba(123, 97, 255, 0.1);
+            border: 1px solid var(--border-highlight);
+            border-radius: 16px;
+            padding: 1rem 1.5rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            min-width: 160px;
+        }
+        
+        .token-selector:hover {
+            background: rgba(123, 97, 255, 0.2);
+            transform: translateY(-2px);
+        }
+        
+        .token-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--accent-gradient);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            font-size: 16px;
+            box-shadow: var(--accent-glow);
+        }
+        
+        .token-info {
+            flex-grow: 1;
+        }
+        
+        .token-name {
+            font-weight: 700;
+            font-size: 1.1rem;
+        }
+        
+        .token-balance {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+        
+        .token-arrow {
+            color: var(--text-tertiary);
+        }
+        
+        /* 交换箭头 */
+        .swap-arrow {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1.5rem;
+        }
+        
+        .swap-btn {
+            background: var(--accent-gradient);
+            border: none;
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            color: white;
+            font-size: 1.6rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.4s;
+            box-shadow: var(--accent-glow);
+            z-index: 10;
+            position: relative;
+        }
+        
+        .swap-btn:hover {
+            transform: rotate(180deg) scale(1.1);
+            box-shadow: 0 20px 50px rgba(123, 97, 255, 0.6);
+        }
+        
+        .swap-line {
+            width: 1px;
+            height: 100px;
+            background: linear-gradient(to bottom, transparent, var(--accent), transparent);
+            opacity: 0.5;
+        }
+        
+        /* 桥接信息 */
+        .bridge-info {
+            background: rgba(10, 10, 15, 0.7);
+            border-radius: 24px;
+            padding: 2rem;
+            border: 1px solid var(--border);
+            margin-top: 2.5rem;
+        }
+        
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.2rem;
+        }
+        
+        .info-row:last-child {
+            margin-bottom: 0;
+        }
+        
+        .info-label {
+            color: var(--text-secondary);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1rem;
+        }
+        
+        .info-value {
+            font-weight: 700;
+            font-size: 1.1rem;
+        }
+        
+        .info-value.highlight {
+            color: var(--accent);
+            font-weight: 800;
+        }
+        
+        /* 桥接按钮 */
+        .bridge-action {
+            margin-top: 3rem;
+            text-align: center;
+        }
+        
+        .bridge-action-btn {
+            background: var(--accent-gradient);
+            color: white;
+            border: none;
+            padding: 1.5rem 4rem;
+            border-radius: 20px;
+            font-weight: 800;
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: all 0.4s;
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            box-shadow: var(--accent-glow);
+            letter-spacing: 0.5px;
+            min-width: 300px;
+            justify-content: center;
+        }
+        
+        .bridge-action-btn:hover:not(:disabled) {
+            transform: translateY(-5px);
+            box-shadow: 0 25px 60px rgba(123, 97, 255, 0.7);
+        }
+        
+        .bridge-action-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        
+        /* 质押卡片 */
+        .staking-card {
+            background: var(--card-bg);
+            border-radius: 28px;
+            border: 1px solid var(--border);
+            overflow: hidden;
+            margin-bottom: 4rem;
+            backdrop-filter: blur(20px);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+        }
+        
+        .staking-content {
+            padding: 2.5rem;
+            display: grid;
+            grid-template-columns: 1fr 1.2fr;
+            gap: 2.5rem;
+        }
+        
+        .staking-stats {
+            background: rgba(10, 10, 15, 0.7);
+            border-radius: 24px;
+            padding: 2.2rem;
+            border: 1px solid var(--border);
+        }
+        
+        .staking-stats h3 {
+            font-size: 1.4rem;
+            margin-bottom: 2rem;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .staking-stats h3 i {
+            color: var(--accent);
+            font-size: 1.2rem;
+        }
+        
+        .staking-stat {
+            margin-bottom: 2rem;
+        }
+        
+        .staking-label {
+            display: block;
+            margin-bottom: 0.8rem;
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+        }
+        
+        .staking-value {
+            font-size: 2.2rem;
+            font-weight: 800;
+            color: var(--text-primary);
+            font-family: 'Space Grotesk', sans-serif;
+            letter-spacing: -0.5px;
+        }
+        
+        .staking-progress {
+            height: 10px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 5px;
+            margin-top: 1.2rem;
+            overflow: hidden;
+        }
+        
+        .progress-bar {
+            height: 100%;
+            background: var(--accent-gradient);
+            border-radius: 5px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .progress-bar::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            animation: shimmer 2s infinite;
+        }
+        
+        @keyframes shimmer {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+        
+        /* 质押表单 */
+        .staking-form {
+            background: rgba(10, 10, 15, 0.7);
+            border-radius: 24px;
+            padding: 2.2rem;
+            border: 1px solid var(--border);
+        }
+        
+        .staking-form h3 {
+            font-size: 1.4rem;
+            margin-bottom: 2rem;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .staking-form h3 i {
+            color: var(--accent);
+            font-size: 1.2rem;
+        }
+        
+        .form-group {
+            margin-bottom: 1.8rem;
+        }
+        
+        .form-label {
+            display: block;
+            margin-bottom: 1rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            font-size: 1.1rem;
+        }
+        
+        .staking-amount-input {
+            width: 100%;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 1.2rem;
+            color: var(--text-primary);
+            font-size: 1.4rem;
+            font-weight: 600;
+            outline: none;
+            transition: all 0.3s;
+        }
+        
+        .staking-amount-input:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(123, 97, 255, 0.2);
+        }
+        
+        .staking-actions {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+        
+        .stake-btn {
+            flex: 1;
+            padding: 1rem;
+            background: rgba(123, 97, 255, 0.1);
+            border: 1px solid var(--border-highlight);
+            border-radius: 12px;
+            color: var(--text-primary);
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .stake-btn:hover {
+            background: rgba(123, 97, 255, 0.2);
+        }
+        
+        .stake-btn.active {
+            background: rgba(123, 97, 255, 0.3);
+            border-color: var(--accent);
+            color: var(--accent);
+            box-shadow: 0 5px 20px rgba(123, 97, 255, 0.3);
+        }
+        
+        .duration-selector {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1.2rem;
+            margin-bottom: 2.5rem;
+        }
+        
+        .duration-option {
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 1.5rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .duration-option:hover {
+            border-color: var(--border-highlight);
+            transform: translateY(-3px);
+        }
+        
+        .duration-option.selected {
+            background: rgba(123, 97, 255, 0.2);
+            border-color: var(--accent);
+            box-shadow: 0 10px 30px rgba(123, 97, 255, 0.3);
+        }
+        
+        .duration-months {
+            font-size: 1.3rem;
+            font-weight: 800;
+            margin-bottom: 0.5rem;
+            color: var(--text-primary);
+        }
+        
+        .duration-multiplier {
+            font-size: 1rem;
+            color: var(--accent);
+            font-weight: 700;
+        }
+        
+        .stake-submit-btn {
+            width: 100%;
+            background: var(--accent-gradient);
+            border: none;
+            padding: 1.5rem;
+            border-radius: 16px;
+            color: white;
+            font-weight: 800;
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: all 0.4s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            box-shadow: var(--accent-glow);
+        }
+        
+        .stake-submit-btn:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 50px rgba(123, 97, 255, 0.7);
+        }
+        
+        /* 区块浏览器 */
+        .explorer-card {
+            background: var(--card-bg);
+            border-radius: 28px;
+            border: 1px solid var(--border);
+            overflow: hidden;
+            margin-bottom: 4rem;
+            backdrop-filter: blur(20px);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+        }
+        
+        .explorer-content {
+            padding: 2.5rem;
+        }
+        
+        .blocks-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 2rem;
+        }
+        
+        .block-card {
+            background: rgba(10, 10, 15, 0.7);
+            border-radius: 20px;
+            padding: 2rem;
+            border: 1px solid var(--border);
+            transition: all 0.4s;
+        }
+        
+        .block-card:hover {
+            border-color: var(--border-highlight);
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+        }
+        
+        .block-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+        
+        .block-number {
+            font-size: 1.3rem;
+            font-weight: 800;
+            color: var(--accent);
+            font-family: 'Space Grotesk', sans-serif;
+        }
+        
+        .block-time {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+        
+        .block-details {
+            margin-top: 1.5rem;
+        }
+        
+        .block-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 1rem;
+        }
+        
+        .block-label {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+        }
+        
+        .block-value {
+            font-weight: 600;
+            font-size: 0.95rem;
+            color: var(--text-primary);
+        }
+        
+        /* 页脚 */
+        .footer {
+            margin-top: 6rem;
+            padding: 4rem 0;
+            border-top: 1px solid var(--border);
+            background: rgba(10, 10, 15, 0.8);
+            backdrop-filter: blur(20px);
+        }
+        
+        .footer-grid {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr;
+            gap: 3rem;
+        }
+        
+        .footer-logo {
+            font-size: 1.6rem;
+            font-weight: 800;
+            margin-bottom: 1.5rem;
+            background: var(--accent-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: -0.5px;
+        }
+        
+        .footer-description {
+            color: var(--text-secondary);
+            line-height: 1.8;
+            margin-bottom: 2rem;
+        }
+        
+        .social-links {
+            display: flex;
+            gap: 1.2rem;
+        }
+        
+        .social-link {
+            width: 48px;
+            height: 48px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+        
+        .social-link:hover {
+            background: rgba(123, 97, 255, 0.2);
+            color: var(--accent);
+            transform: translateY(-3px);
+        }
+        
+        .footer-heading {
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin-bottom: 1.8rem;
+            color: var(--text-primary);
+            letter-spacing: 0.5px;
+        }
+        
+        .footer-links {
+            list-style: none;
+        }
+        
+        .footer-links li {
+            margin-bottom: 1rem;
+        }
+        
+        .footer-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: color 0.3s;
+            font-size: 0.95rem;
+        }
+        
+        .footer-links a:hover {
+            color: var(--accent);
+        }
+        
+        .copyright {
+            margin-top: 4rem;
+            padding-top: 2.5rem;
+            border-top: 1px solid var(--border);
+            text-align: center;
+            color: var(--text-tertiary);
+            font-size: 0.9rem;
+            max-width: 1400px;
+            margin-left: auto;
+            margin-right: auto;
+            padding-left: 2rem;
+            padding-right: 2rem;
+        }
+        
+        /* 响应式设计 */
+        @media (max-width: 1200px) {
+            .bridge-container {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+            
+            .swap-arrow {
+                flex-direction: row;
+                justify-content: center;
+                margin: 1.5rem 0;
+            }
+            
+            .swap-line {
+                width: 100px;
+                height: 1px;
+                background: linear-gradient(to right, transparent, var(--accent), transparent);
+            }
+            
+            .staking-content {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        @media (max-width: 992px) {
+            .nav-menu {
+                display: none;
+            }
+            
+            .footer-grid {
+                grid-template-columns: 1fr 1fr;
+                gap: 2.5rem;
+            }
+            
+            .dashboard-header h1 {
+                font-size: 2.8rem;
+            }
+            
+            .duration-selector {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .main-container {
+                padding: 0 1.5rem;
+            }
+            
+            .dashboard-header h1 {
+                font-size: 2.2rem;
+            }
+            
+            .dashboard-header p {
+                font-size: 1.1rem;
+            }
+            
+            .chain-stats {
+                grid-template-columns: 1fr;
+            }
+            
+            .tabs-nav {
+                width: 100%;
+                overflow-x: auto;
+                padding: 0.3rem;
+            }
+            
+            .tab-btn {
+                padding: 1rem 1.5rem;
+                font-size: 0.95rem;
+            }
+            
+            .footer-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .blocks-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .bridge-content, .staking-content, .explorer-content {
+                padding: 1.5rem;
+            }
+            
+            .card-header {
+                padding: 1.5rem;
+            }
+        }
+        
+        /* 动画 */
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+        
+        .floating {
+            animation: float 5s ease-in-out infinite;
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        
+        .pulse {
+            animation: pulse 3s infinite;
+        }
+        
+        /* 滚动条样式 */
+        ::-webkit-scrollbar {
+            width: 10px;
+            height: 10px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: rgba(10, 10, 15, 0.8);
+            border-radius: 5px;
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: rgba(123, 97, 255, 0.5);
+            border-radius: 5px;
+        }
+        
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(123, 97, 255, 0.7);
+        }
+        
+        /* 选择文本样式 */
+        ::selection {
+            background: rgba(123, 97, 255, 0.3);
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <!-- 网格背景 -->
+    <div class="grid-bg"></div>
+    
+    <!-- 导航栏 -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="logo">
+                <div class="logo-icon pulse">TTE</div>
+                <div class="logo-text">TTE NETWORK</div>
+            </div>
+            
+            <div class="nav-menu">
+                <a href="#dashboard" class="nav-link active">Dashboard</a>
+                <a href="#bridge" class="nav-link">Cross-Chain Bridge</a>
+                <a href="#staking" class="nav-link">Staking</a>
+                <a href="#explorer" class="nav-link">Block Explorer</a>
+                <a href="#docs" class="nav-link">Documentation</a>
+            </div>
+            
+            <div class="nav-actions">
+                <!-- 语言选择器 -->
+                <div class="language-selector">
+                    <div class="lang-trigger" id="langTrigger">
+                        <i class="fas fa-globe"></i>
+                    </div>
+                    <div class="lang-dropdown" id="langDropdown">
+                        <div class="lang-option active" data-lang="en">
+                            <div class="lang-flag flag-en"></div>
+                            <span>English</span>
+                        </div>
+                        <div class="lang-option" data-lang="zh">
+                            <div class="lang-flag flag-cn"></div>
+                            <span>中文</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <button class="wallet-btn" id="connectWallet">
+                    <i class="fas fa-wallet"></i>
+                    Connect Wallet
+                </button>
+            </div>
+        </div>
+    </nav>
+    
+    <!-- 主容器 -->
+    <div class="main-container">
+        <!-- 仪表板标题 -->
+        <div class="dashboard-header" id="dashboard">
+            <h1 id="mainTitle">Enterprise-Grade Blockchain Infrastructure</h1>
+            <p id="mainSubtitle">Secure, scalable, and interoperable blockchain network with institutional-grade security, advanced cross-chain capabilities, and optimized staking rewards for enterprise applications.</p>
+        </div>
+        
+        <!-- 区块链状态统计 -->
+        <div class="chain-stats">
+            <div class="stat-card floating">
+                <div class="stat-header">
+                    <div class="stat-title">
+                        <div class="stat-icon">
+                            <i class="fas fa-cube"></i>
+                        </div>
+                        Block Height
+                    </div>
+                    <div class="stat-change positive">
+                        <i class="fas fa-arrow-up"></i>
+                        +2.1%
+                    </div>
+                </div>
+                <div class="stat-value" id="blockHeight">4,827,419</div>
+                <div class="stat-subtitle">Last block: 12 seconds ago</div>
+            </div>
+            
+            <div class="stat-card floating" style="animation-delay: 0.5s;">
+                <div class="stat-header">
+                    <div class="stat-title">
+                        <div class="stat-icon">
+                            <i class="fas fa-exchange-alt"></i>
+                        </div>
+                        Transactions
+                    </div>
+                    <div class="stat-change positive">
+                        <i class="fas fa-arrow-up"></i>
+                        +5.3%
+                    </div>
+                </div>
+                <div class="stat-value" id="totalTxs">18.2M</div>
+                <div class="stat-subtitle">24h volume: 284.7K TXs</div>
+            </div>
+            
+            <div class="stat-card floating" style="animation-delay: 1s;">
+                <div class="stat-header">
+                    <div class="stat-title">
+                        <div class="stat-icon">
+                            <i class="fas fa-tachometer-alt"></i>
+                        </div>
+                        Network TPS
+                    </div>
+                    <div class="stat-change positive">
+                        <i class="fas fa-arrow-up"></i>
+                        +12.4%
+                    </div>
+                </div>
+                <div class="stat-value" id="networkTps">2,847</div>
+                <div class="stat-subtitle">Peak: 3,142 TPS</div>
+            </div>
+            
+            <div class="stat-card floating" style="animation-delay: 1.5s;">
+                <div class="stat-header">
+                    <div class="stat-title">
+                        <div class="stat-icon">
+                            <i class="fas fa-lock"></i>
+                        </div>
+                        Total Value Locked
+                    </div>
+                    <div class="stat-change positive">
+                        <i class="fas fa-arrow-up"></i>
+                        +8.7%
+                    </div>
+                </div>
+                <div class="stat-value" id="totalValueLocked">$142.8M</div>
+                <div class="stat-subtitle">Across all protocols</div>
+            </div>
+        </div>
+        
+        <!-- 标签页导航 -->
+        <div class="tabs-nav">
+            <button class="tab-btn active" data-tab="bridge">Cross-Chain Bridge</button>
+            <button class="tab-btn" data-tab="staking">TTE Staking</button>
+            <button class="tab-btn" data-tab="explorer">Block Explorer</button>
+        </div>
+        
+        <!-- 跨链桥卡片 -->
+        <div class="tab-content active" id="bridgeTab">
+            <div class="bridge-card">
+                <div class="card-header">
+                    <div class="card-title">
+                        <i class="fas fa-link"></i>
+                        <span id="bridgeTitle">Cross-Chain Bridge</span>
+                    </div>
+                    <div class="card-actions">
+                        <button class="action-btn" id="settingsBtn" title="Settings">
+                            <i class="fas fa-cog"></i>
+                        </button>
+                        <button class="action-btn" id="historyBtn" title="Transaction History">
+                            <i class="fas fa-history"></i>
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="bridge-content">
+                    <div class="bridge-container">
+                        <!-- 来源链 -->
+                        <div class="chain-section">
+                            <div class="section-header">
+                                <div class="section-label" id="fromLabel">From</div>
+                                <div class="balance" id="fromBalance">Balance: 12.85 TTE</div>
+                            </div>
+                            
+                            <div class="chain-selector">
+                                <div class="chain-icon" id="fromChainIcon">
+                                    <i class="fab fa-ethereum"></i>
+                                </div>
+                                <div class="chain-details">
+                                    <div class="chain-name" id="fromChainName">Ethereum</div>
+                                    <div class="chain-address" id="fromChainAddress">Mainnet</div>
+                                </div>
+                                <div class="chain-actions">
+                                    <button class="chain-action-btn" id="changeFromChain">
+                                        <i class="fas fa-chevron-down"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            
+                            <div class="amount-input-container">
+                                <label class="amount-label" id="amountLabel">Amount to Bridge</label>
+                                <div class="amount-input-wrapper">
+                                    <input type="number" class="amount-input" id="amountInput" placeholder="0.0" min="0" step="0.01">
+                                    <div class="token-selector" id="tokenSelector">
+                                        <div class="token-icon">T</div>
+                                        <div class="token-info">
+                                            <div class="token-name" id="selectedToken">TTE</div>
+                                            <div class="token-balance" id="selectedTokenBalance">Balance: 12.85</div>
+                                        </div>
+                                        <i class="fas fa-chevron-down"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- 交换箭头 -->
+                        <div class="swap-arrow">
+                            <div class="swap-line"></div>
+                            <button class="swap-btn" id="swapChains">
+                                <i class="fas fa-exchange-alt"></i>
+                            </button>
+                            <div class="swap-line"></div>
+                        </div>
+                        
+                        <!-- 目标链 -->
+                        <div class="chain-section">
+                            <div class="section-header">
+                                <div class="section-label" id="toLabel">To</div>
+                                <div class="balance" id="toBalance">Balance: 0.42 TTE</div>
+                            </div>
+                            
+                            <div class="chain-selector">
+                                <div class="chain-icon" id="toChainIcon">
+                                    <i class="fas fa-cube"></i>
+                                </div>
+                                <div class="chain-details">
+                                    <div class="chain-name" id="toChainName">TTE Network</div>
+                                    <div class="chain-address" id="toChainAddress">Layer 1</div>
+                                </div>
+                                <div class="chain-actions">
+                                    <button class="chain-action-btn" id="changeToChain">
+                                        <i class="fas fa-chevron-down"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            
+                            <div class="amount-input-container">
+                                <label class="amount-label" id="receiveLabel">You will receive</label>
+                                <div class="amount-input-wrapper">
+                                    <div class="amount-input" id="receiveAmount">0.0</div>
+                                    <div class="token-selector">
+                                        <div class="token-icon">T</div>
+                                        <div class="token-info">
+                                            <div class="token-name" id="receiveToken">TTE</div>
+                                            <div class="token-balance">On TTE Network</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 桥接信息 -->
+                    <div class="bridge-info">
+                        <div class="info-row">
+                            <div class="info-label">
+                                <i class="fas fa-gas-pump"></i>
+                                <span id="feeLabel">Bridge Fee</span>
+                            </div>
+                            <div class="info-value" id="bridgeFee">0.005 ETH</div>
+                        </div>
+                        <div class="info-row">
+                            <div class="info-label">
+                                <i class="fas fa-clock"></i>
+                                <span id="timeLabel">Estimated Time</span>
+                            </div>
+                            <div class="info-value highlight" id="bridgeTime">~3 minutes</div>
+                        </div>
+                        <div class="info-row">
+                            <div class="info-label">
+                                <i class="fas fa-exchange-alt"></i>
+                                <span id="rateLabel">Exchange Rate</span>
+                            </div>
+                            <div class="info-value" id="exchangeRate">1 TTE = 1 TTE</div>
+                        </div>
+                    </div>
+                    
+                    <!-- 桥接按钮 -->
+                    <div class="bridge-action">
+                        <button class="bridge-action-btn" id="bridgeButton">
+                            <i class="fas fa-link"></i>
+                            <span id="bridgeButtonText">Connect Wallet to Bridge</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 质押卡片 -->
+        <div class="tab-content" id="stakingTab" style="display: none;">
+            <div class="staking-card">
+                <div class="card-header">
+                    <div class="card-title">
+                        <i class="fas fa-coins"></i>
+                        <span id="stakingTitle">TTE Staking</span>
+                    </div>
+                    <div class="card-actions">
+                        <button class="action-btn" id="stakingHistoryBtn" title="Staking History">
+                            <i class="fas fa-history"></i>
+                        </button>
+                        <button class="action-btn" id="rewardsBtn" title="Claim Rewards">
+                            <i class="fas fa-gift"></i>
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="staking-content">
+                    <!-- 质押统计 -->
+                    <div class="staking-stats">
+                        <h3><i class="fas fa-chart-line"></i> <span id="statsTitle">Staking Statistics</span></h3>
+                        
+                        <div class="staking-stat">
+                            <span class="staking-label" id="totalStakedLabel">Total TTE Staked</span>
+                            <div class="staking-value" id="totalStakedValue">284.7M TTE</div>
+                            <div class="staking-progress">
+                                <div class="progress-bar" style="width: 65%"></div>
+                            </div>
+                        </div>
+                        
+                        <div class="staking-stat">
+                            <span class="staking-label" id="apyLabel">Current APY</span>
+                            <div class="staking-value" id="apyValue">12.4%</div>
+                            <div class="staking-progress">
+                                <div class="progress-bar" style="width: 80%"></div>
+                            </div>
+                        </div>
+                        
+                        <div class="staking-stat">
+                            <span class="staking-label" id="validatorsLabel">Active Validators</span>
+                            <div class="staking-value" id="validatorsValue">1,247</div>
+                            <div class="staking-progress">
+                                <div class="progress-bar" style="width: 75%"></div>
+                            </div>
+                        </div>
+                        
+                        <div class="staking-stat">
+                            <span class="staking-label" id="rewardsLabel">Your Rewards</span>
+                            <div class="staking-value" id="rewardsValue">12,845 TTE</div>
+                            <div class="staking-progress">
+                                <div class="progress-bar" style="width: 45%"></div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 质押表单 -->
+                    <div class="staking-form">
+                        <h3><i class="fas fa-wallet"></i> <span id="stakeFormTitle">Stake TTE</span></h3>
+                        
+                        <div class="form-group">
+                            <label class="form-label" id="stakeAmountLabel">Amount to Stake</label>
+                            <input type="number" class="staking-amount-input" id="stakeAmountInput" placeholder="0.0" min="0" step="0.01">
+                        </div>
+                        
+                        <div class="staking-actions">
+                            <button class="stake-btn" data-percent="25">25%</button>
+                            <button class="stake-btn" data-percent="50">50%</button>
+                            <button class="stake-btn" data-percent="75">75%</button>
+                            <button class="stake-btn active" data-percent="100">MAX</button>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label" id="durationLabel">Staking Duration</label>
+                            <div class="duration-selector">
+                                <div class="duration-option selected" data-months="1">
+                                    <div class="duration-months">1 Month</div>
+                                    <div class="duration-multiplier">1x Reward</div>
+                                </div>
+                                <div class="duration-option" data-months="3">
+                                    <div class="duration-months">3 Months</div>
+                                    <div class="duration-multiplier">1.4x Reward</div>
+                                </div>
+                                <div class="duration-option" data-months="6">
+                                    <div class="duration-months">6 Months</div>
+                                    <div class="duration-multiplier">2x Reward</div>
+                                </div>
+                                <div class="duration-option" data-months="12">
+                                    <div class="duration-months">12 Months</div>
+                                    <div class="duration-multiplier">3.2x Reward</div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="bridge-info">
+                            <div class="info-row">
+                                <div class="info-label">
+                                    <i class="fas fa-percentage"></i>
+                                    <span id="estApyLabel">Estimated APY</span>
+                                </div>
+                                <div class="info-value" id="estApyValue">15.2%</div>
+                            </div>
+                            <div class="info-row">
+                                <div class="info-label">
+                                    <i class="fas fa-calendar-alt"></i>
+                                    <span id="lockPeriodLabel">Lock Period</span>
+                                </div>
+                                <div class="info-value" id="lockPeriodValue">30 Days</div>
+                            </div>
+                            <div class="info-row">
+                                <div class="info-label">
+                                    <i class="fas fa-coins"></i>
+                                    <span id="estRewardsLabel">Estimated Rewards</span>
+                                </div>
+                                <div class="info-value highlight" id="estRewardsValue">152 TTE</div>
+                            </div>
+                        </div>
+                        
+                        <button class="stake-submit-btn" id="stakeSubmitBtn">
+                            <i class="fas fa-lock"></i>
+                            <span id="stakeSubmitText">Stake TTE</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 区块浏览器 -->
+        <div class="tab-content" id="explorerTab" style="display: none;">
+            <div class="explorer-card">
+                <div class="card-header">
+                    <div class="card-title">
+                        <i class="fas fa-cube"></i>
+                        <span id="explorerTitle">Block Explorer</span>
+                    </div>
+                    <div class="card-actions">
+                        <button class="action-btn" id="refreshBlocksBtn" title="Refresh">
+                            <i class="fas fa-sync-alt"></i>
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="explorer-content">
+                    <div class="blocks-grid" id="blocksGrid">
+                        <!-- 区块将通过JavaScript动态生成 -->
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 页脚 -->
+        <footer class="footer">
+            <div class="footer-grid">
+                <div>
+                    <div class="footer-logo">TTE NETWORK</div>
+                    <p class="footer-description" id="footerDescription">
+                        A high-performance Layer 1 blockchain network with native RWA integration and cross-chain interoperability. 
+                        Built for the future of decentralized finance and real-world asset tokenization with institutional-grade security.
+                    </p>
+                    <div class="social-links">
+                        <a href="#" class="social-link">
+                            <i class="fab fa-twitter"></i>
+                        </a>
+                        <a href="#" class="social-link">
+                            <i class="fab fa-github"></i>
+                        </a>
+                        <a href="#" class="social-link">
+                            <i class="fab fa-discord"></i>
+                        </a>
+                        <a href="#" class="social-link">
+                            <i class="fab fa-telegram"></i>
+                        </a>
+                    </div>
+                </div>
+                
+                <div>
+                    <h3 class="footer-heading" id="networkHeading">Network</h3>
+                    <ul class="footer-links">
+                        <li><a href="#" id="footerExplorer">Block Explorer</a></li>
+                        <li><a href="#" id="footerValidators">Validators</a></li>
+                        <li><a href="#" id="footerGovernance">Governance</a></li>
+                        <li><a href="#" id="footerStaking">Staking</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h3 class="footer-heading" id="developersHeading">Developers</h3>
+                    <ul class="footer-links">
+                        <li><a href="#" id="footerDocs">Documentation</a></li>
+                        <li><a href="#" id="footerAPI">API Reference</a></li>
+                        <li><a href="#" id="footerContracts">Smart Contracts</a></li>
+                        <li><a href="#" id="footerGithub">GitHub</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h3 class="footer-heading" id="communityHeading">Community</h3>
+                    <ul class="footer-links">
+                        <li><a href="#" id="footerBlog">Blog</a></li>
+                        <li><a href="#" id="footerForum">Forum</a></li>
+                        <li><a href="#" id="footerGrants">Grants</a></li>
+                        <li><a href="#" id="footerContact">Contact</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="copyright">
+                &copy; 2024 TTE NETWORK. <span id="copyrightText">All rights reserved. Enterprise-grade blockchain infrastructure.</span>
+            </div>
+        </footer>
+    </div>
+    
+    <!-- 脚本 -->
+    <script>
+        // 语言切换功能
+        let currentLanguage = 'en';
+        const translations = {
+            en: {
+                mainTitle: "Enterprise-Grade Blockchain Infrastructure",
+                mainSubtitle: "Secure, scalable, and interoperable blockchain network with institutional-grade security, advanced cross-chain capabilities, and optimized staking rewards for enterprise applications.",
+                bridgeTitle: "Cross-Chain Bridge",
+                fromLabel: "From",
+                toLabel: "To",
+                amountLabel: "Amount to Bridge",
+                receiveLabel: "You will receive",
+                feeLabel: "Bridge Fee",
+                timeLabel: "Estimated Time",
+                rateLabel: "Exchange Rate",
+                bridgeButtonText: "Connect Wallet to Bridge",
+                bridgeButtonTextConnected: "Bridge Assets",
+                stakingTitle: "TTE Staking",
+                statsTitle: "Staking Statistics",
+                totalStakedLabel: "Total TTE Staked",
+                apyLabel: "Current APY",
+                validatorsLabel: "Active Validators",
+                rewardsLabel: "Your Rewards",
+                stakeFormTitle: "Stake TTE",
+                stakeAmountLabel: "Amount to Stake",
+                durationLabel: "Staking Duration",
+                estApyLabel: "Estimated APY",
+                lockPeriodLabel: "Lock Period",
+                estRewardsLabel: "Estimated Rewards",
+                stakeSubmitText: "Stake TTE",
+                explorerTitle: "Block Explorer",
+                footerDescription: "A high-performance Layer 1 blockchain network with native RWA integration and cross-chain interoperability. Built for the future of decentralized finance and real-world asset tokenization with institutional-grade security.",
+                networkHeading: "Network",
+                footerExplorer: "Block Explorer",
+                footerValidators: "Validators",
+                footerGovernance: "Governance",
+                footerStaking: "Staking",
+                developersHeading: "Developers",
+                footerDocs: "Documentation",
+                footerAPI: "API Reference",
+                footerContracts: "Smart Contracts",
+                footerGithub: "GitHub",
+                communityHeading: "Community",
+                footerBlog: "Blog",
+                footerForum: "Forum",
+                footerGrants: "Grants",
+                footerContact: "Contact",
+                copyrightText: "All rights reserved. Enterprise-grade blockchain infrastructure.",
+                connectWallet: "Connect Wallet",
+                connected: "Connected",
+                processing: "Processing...",
+                success: "Success!",
+                bridgeSuccess: "Bridge transaction completed successfully",
+                stakeSuccess: "TTE staked successfully",
+                error: "Error",
+                connectWalletFirst: "Please connect your wallet first",
+                enterValidAmount: "Please enter a valid amount",
+                insufficientBalance: "Insufficient balance"
+            },
+            zh: {
+                mainTitle: "企业级区块链基础设施",
+                mainSubtitle: "安全、可扩展且可互操作的区块链网络，具有机构级安全性、先进的跨链功能以及为企业应用优化的质押奖励。",
+                bridgeTitle: "跨链桥",
+                fromLabel: "来源链",
+                toLabel: "目标链",
+                amountLabel: "转移数量",
+                receiveLabel: "您将收到",
+                feeLabel: "跨链费用",
+                timeLabel: "预计时间",
+                rateLabel: "兑换汇率",
+                bridgeButtonText: "连接钱包以跨链",
+                bridgeButtonTextConnected: "执行跨链",
+                stakingTitle: "TTE质押",
+                statsTitle: "质押统计",
+                totalStakedLabel: "总质押TTE",
+                apyLabel: "当前年化收益率",
+                validatorsLabel: "活跃验证者",
+                rewardsLabel: "您的奖励",
+                stakeFormTitle: "质押TTE",
+                stakeAmountLabel: "质押数量",
+                durationLabel: "质押期限",
+                estApyLabel: "预计年化收益率",
+                lockPeriodLabel: "锁定周期",
+                estRewardsLabel: "预计奖励",
+                stakeSubmitText: "质押TTE",
+                explorerTitle: "区块浏览器",
+                footerDescription: "一个具有原生RWA集成和跨链互操作性的高性能Layer 1区块链网络。为去中心化金融和现实世界资产代币化的未来而构建，具有机构级安全性。",
+                networkHeading: "网络",
+                footerExplorer: "区块浏览器",
+                footerValidators: "验证者",
+                footerGovernance: "治理",
+                footerStaking: "质押",
+                developersHeading: "开发者",
+                footerDocs: "文档",
+                footerAPI: "API参考",
+                footerContracts: "智能合约",
+                footerGithub: "GitHub",
+                communityHeading: "社区",
+                footerBlog: "博客",
+                footerForum: "论坛",
+                footerGrants: "资助计划",
+                footerContact: "联系我们",
+                copyrightText: "保留所有权利。企业级区块链基础设施。",
+                connectWallet: "连接钱包",
+                connected: "已连接",
+                processing: "处理中...",
+                success: "成功!",
+                bridgeSuccess: "跨链交易已完成",
+                stakeSuccess: "TTE质押成功",
+                error: "错误",
+                connectWalletFirst: "请先连接钱包",
+                enterValidAmount: "请输入有效数量",
+                insufficientBalance: "余额不足"
+            }
+        };
+        
+        // 区块链和代币数据
+        const chains = [
+            { id: 'eth', name: { en: 'Ethereum', zh: '以太坊' }, icon: 'fab fa-ethereum', color: '#627EEA', address: { en: 'Mainnet', zh: '主网' } },
+            { id: 'bsc', name: { en: 'BNB Chain', zh: 'BNB链' }, icon: 'fas fa-chart-line', color: '#F0B90B', address: { en: 'Mainnet', zh: '主网' } },
+            { id: 'polygon', name: { en: 'Polygon', zh: 'Polygon' }, icon: 'fas fa-polygon', color: '#8247E5', address: { en: 'Mainnet', zh: '主网' } },
+            { id: 'avalanche', name: { en: 'Avalanche', zh: 'Avalanche' }, icon: 'fas fa-snowflake', color: '#E84142', address: { en: 'Mainnet', zh: '主网' } },
+            { id: 'arbitrum', name: { en: 'Arbitrum', zh: 'Arbitrum' }, icon: 'fas fa-layer-group', color: '#28A0F0', address: { en: 'Layer 2', zh: 'Layer 2' } },
+            { id: 'tte', name: { en: 'TTE Network', zh: 'TTE网络' }, icon: 'fas fa-cube', color: '#7B61FF', address: { en: 'Layer 1', zh: 'Layer 1' } }
+        ];
+        
+        const tokens = [
+            { id: 'tte', name: { en: 'TTE', zh: 'TTE' }, symbol: 'TTE', icon: 'T', color: '#7B61FF', balance: 12.85 },
+            { id: 'eth', name: { en: 'Ethereum', zh: '以太坊' }, symbol: 'ETH', icon: 'Ξ', color: '#627EEA', balance: 0.42 },
+            { id: 'usdc', name: { en: 'USD Coin', zh: 'USD Coin' }, symbol: 'USDC', icon: '$', color: '#2775CA', balance: 1500 },
+            { id: 'usdt', name: { en: 'Tether', zh: '泰达币' }, symbol: 'USDT', icon: '₮', color: '#26A17B', balance: 800 }
+        ];
+        
+        // 应用状态
+        let isWalletConnected = false;
+        let walletAddress = null;
+        let currentFromChain = chains[0]; // Ethereum
+        let currentToChain = chains[5]; // TTE Network
+        let currentToken = tokens[0]; // TTE
+        let stakingDuration = 1; // 默认1个月
+        let stakingMultiplier = 1; // 默认乘数
+        
+        // 区块数据
+        let blockHeight = 4827419;
+        let totalTxs = 18200000;
+        
+        // DOM加载完成后初始化
+        document.addEventListener('DOMContentLoaded', function() {
+            // 初始化语言
+            updateLanguage();
+            
+            // 初始化UI元素
+            updateChainUI();
+            updateTokenUI();
+            updateBridgeInfo();
+            updateStakingInfo();
+            generateBlocks();
+            
+            // 语言切换
+            const langTrigger = document.getElementById('langTrigger');
+            const langDropdown = document.getElementById('langDropdown');
+            const langOptions = document.querySelectorAll('.lang-option');
+            
+            langTrigger.addEventListener('click', function(e) {
+                e.stopPropagation();
+                langDropdown.classList.toggle('show');
+            });
+            
+            langOptions.forEach(option => {
+                option.addEventListener('click', function() {
+                    const lang = this.getAttribute('data-lang');
+                    if (lang !== currentLanguage) {
+                        currentLanguage = lang;
+                        updateLanguage();
+                        
+                        // 更新激活状态
+                        langOptions.forEach(opt => opt.classList.remove('active'));
+                        this.classList.add('active');
+                        
+                        // 关闭下拉菜单
+                        langDropdown.classList.remove('show');
+                    }
+                });
+            });
+            
+            // 点击页面其他区域关闭语言下拉菜单
+            document.addEventListener('click', function() {
+                langDropdown.classList.remove('show');
+            });
+            
+            // 标签页切换
+            const tabBtns = document.querySelectorAll('.tab-btn');
+            const tabContents = document.querySelectorAll('.tab-content');
+            
+            tabBtns.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const tabId = this.getAttribute('data-tab');
+                    
+                    // 更新激活状态
+                    tabBtns.forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    // 显示对应内容
+                    tabContents.forEach(content => {
+                        content.style.display = 'none';
+                    });
+                    
+                    document.getElementById(`${tabId}Tab`).style.display = 'block';
+                });
+            });
+            
+            // 钱包连接
+            const connectWalletBtn = document.getElementById('connectWallet');
+            const bridgeButton = document.getElementById('bridgeButton');
+            
+            connectWalletBtn.addEventListener('click', function() {
+                if (!isWalletConnected) {
+                    // 模拟连接钱包
+                    isWalletConnected = true;
+                    walletAddress = '0x8a3F...c4B2';
+                    connectWalletBtn.innerHTML = `<i class="fas fa-wallet"></i> ${walletAddress}`;
+                    connectWalletBtn.style.background = 'rgba(123, 97, 255, 0.2)';
+                    connectWalletBtn.style.border = '1px solid rgba(123, 97, 255, 0.3)';
+                    
+                    // 更新桥接按钮
+                    bridgeButton.innerHTML = `<i class="fas fa-link"></i> ${translations[currentLanguage].bridgeButtonTextConnected}`;
+                    bridgeButton.disabled = false;
+                    
+                    // 显示连接成功消息
+                    showNotification(translations[currentLanguage].connected, 'success');
+                } else {
+                    // 模拟断开钱包
+                    isWalletConnected = false;
+                    walletAddress = null;
+                    connectWalletBtn.innerHTML = `<i class="fas fa-wallet"></i> ${translations[currentLanguage].connectWallet}`;
+                    connectWalletBtn.style.background = 'linear-gradient(135deg, #7B61FF, #00E0FF)';
+                    connectWalletBtn.style.border = 'none';
+                    
+                    // 更新桥接按钮
+                    bridgeButton.innerHTML = `<i class="fas fa-link"></i> ${translations[currentLanguage].bridgeButtonText}`;
+                    bridgeButton.disabled = true;
+                    
+                    // 显示断开消息
+                    showNotification('Wallet disconnected', 'info');
+                }
+            });
+            
+            // 交换链按钮
+            document.getElementById('swapChains').addEventListener('click', function() {
+                // 交换源链和目标链
+                const tempChain = currentFromChain;
+                currentFromChain = currentToChain;
+                currentToChain = tempChain;
+                
+                // 更新UI
+                updateChainUI();
+                updateBridgeInfo();
+            });
+            
+            // 桥接金额输入
+            const amountInput = document.getElementById('amountInput');
+            amountInput.addEventListener('input', function() {
+                updateBridgeInfo();
+            });
+            
+            // 桥接按钮
+            bridgeButton.addEventListener('click', function() {
+                handleBridge();
+            });
+            
+            // 质押金额按钮
+            const stakeBtns = document.querySelectorAll('.stake-btn');
+            stakeBtns.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    // 更新激活状态
+                    stakeBtns.forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    // 设置质押金额
+                    const percent = parseInt(this.getAttribute('data-percent'));
+                    const stakeAmountInput = document.getElementById('stakeAmountInput');
+                    stakeAmountInput.value = (currentToken.balance * percent / 100).toFixed(2);
+                    
+                    // 更新预计奖励
+                    updateStakingEstimate();
+                });
+            });
+            
+            // 质押期限选择
+            const durationOptions = document.querySelectorAll('.duration-option');
+            durationOptions.forEach(option => {
+                option.addEventListener('click', function() {
+                    // 更新激活状态
+                    durationOptions.forEach(opt => opt.classList.remove('selected'));
+                    this.classList.add('selected');
+                    
+                    // 设置质押期限
+                    stakingDuration = parseInt(this.getAttribute('data-months'));
+                    
+                    // 更新乘数
+                    if (stakingDuration === 1) stakingMultiplier = 1;
+                    if (stakingDuration === 3) stakingMultiplier = 1.4;
+                    if (stakingDuration === 6) stakingMultiplier = 2;
+                    if (stakingDuration === 12) stakingMultiplier = 3.2;
+                    
+                    // 更新预计奖励
+                    updateStakingEstimate();
+                });
+            });
+            
+            // 质押金额输入
+            const stakeAmountInput = document.getElementById('stakeAmountInput');
+            stakeAmountInput.addEventListener('input', function() {
+                updateStakingEstimate();
+            });
+            
+            // 质押提交按钮
+            const stakeSubmitBtn = document.getElementById('stakeSubmitBtn');
+            stakeSubmitBtn.addEventListener('click', function() {
+                handleStaking();
+            });
+            
+            // 刷新区块按钮
+            document.getElementById('refreshBlocksBtn').addEventListener('click', function() {
+                generateBlocks();
+                showNotification(currentLanguage === 'en' ? 'Blocks refreshed' : '区块已刷新', 'success');
+            });
+            
+            // 自动更新区块高度
+            setInterval(() => {
+                blockHeight++;
+                document.getElementById('blockHeight').textContent = blockHeight.toLocaleString();
+                
+                // 随机增加交易数
+                totalTxs += Math.floor(Math.random() * 100);
+                document.getElementById('totalTxs').textContent = (totalTxs / 1000000).toFixed(1) + 'M';
+                
+                // 随机更新TPS
+                const currentTps = parseInt(document.getElementById('networkTps').textContent.replace(',', ''));
+                const newTps = currentTps + Math.floor(Math.random() * 200) - 100;
+                document.getElementById('networkTps').textContent = Math.max(2500, newTps).toLocaleString();
+                
+                // 偶尔更新TVL
+                if (Math.random() > 0.7) {
+                    const currentTvl = parseFloat(document.getElementById('totalValueLocked').textContent.replace('$', '').replace('M', ''));
+                    const newTvl = currentTvl + (Math.random() * 2 - 1);
+                    document.getElementById('totalValueLocked').textContent = `$${newTvl.toFixed(1)}M`;
+                }
+            }, 10000);
+        });
+        
+        // 更新语言
+        function updateLanguage() {
+            const lang = currentLanguage;
+            const t = translations[lang];
+            
+            // 更新所有文本内容
+            for (const key in t) {
+                const element = document.getElementById(key);
+                if (element) {
+                    element.textContent = t[key];
+                }
+            }
+            
+            // 更新链和代币名称
+            updateChainUI();
+            updateTokenUI();
+            
+            // 更新桥接按钮文本
+            updateBridgeButtonText();
+        }
+        
+        // 更新桥接按钮文本
+        function updateBridgeButtonText() {
+            const t = translations[currentLanguage];
+            const bridgeBtn = document.getElementById('bridgeButton');
+            const bridgeBtnText = document.getElementById('bridgeButtonText');
+            
+            if (!isWalletConnected) {
+                bridgeBtnText.textContent = t.bridgeButtonText;
+            } else {
+                bridgeBtnText.textContent = t.bridgeButtonTextConnected;
+            }
+        }
+        
+        // 更新链UI
+        function updateChainUI() {
+            const lang = currentLanguage;
+            
+            // 更新源链
+            document.getElementById('fromChainIcon').innerHTML = `<i class="${currentFromChain.icon}"></i>`;
+            document.getElementById('fromChainName').textContent = currentFromChain.name[lang];
+            document.getElementById('fromChainAddress').textContent = currentFromChain.address[lang];
+            document.getElementById('fromChainIcon').style.background = `linear-gradient(135deg, ${currentFromChain.color}, #A0A0B0)`;
+            
+            // 更新目标链
+            document.getElementById('toChainIcon').innerHTML = `<i class="${currentToChain.icon}"></i>`;
+            document.getElementById('toChainName').textContent = currentToChain.name[lang];
+            document.getElementById('toChainAddress').textContent = currentToChain.address[lang];
+            document.getElementById('toChainIcon').style.background = `linear-gradient(135deg, ${currentToChain.color}, #A0A0B0)`;
+            
+            // 更新代币余额显示
+            const t = translations[currentLanguage];
+            document.getElementById('fromBalance').textContent = `${t.fromLabel} ${t.fromBalance.split(':')[0]}: ${currentToken.balance.toFixed(2)} ${currentToken.symbol}`;
+            document.getElementById('toBalance').textContent = `${t.toLabel} ${t.toBalance.split(':')[0]}: 0.42 ${currentToken.symbol}`;
+        }
+        
+        // 更新代币UI
+        function updateTokenUI() {
+            const lang = currentLanguage;
+            
+            // 更新选择的代币
+            document.getElementById('selectedToken').textContent = currentToken.symbol;
+            document.getElementById('selectedTokenBalance').textContent = `${translations[currentLanguage].fromBalance.split(':')[0]}: ${currentToken.balance.toFixed(2)}`;
+            document.getElementById('selectedToken').parentElement.parentElement.querySelector('.token-icon').style.background = `linear-gradient(135deg, ${currentToken.color}, #00E0FF)`;
+            document.getElementById('selectedToken').parentElement.parentElement.querySelector('.token-icon').textContent = currentToken.icon;
+            
+            // 更新接收代币
+            document.getElementById('receiveToken').textContent = currentToken.symbol;
+            document.getElementById('receiveToken').parentElement.parentElement.querySelector('.token-icon').style.background = `linear-gradient(135deg, ${currentToken.color}, #00E0FF)`;
+            document.getElementById('receiveToken').parentElement.parentElement.querySelector('.token-icon').textContent = currentToken.icon;
+        }
+        
+        // 更新桥接信息
+        function updateBridgeInfo() {
+            const amount = parseFloat(document.getElementById('amountInput').value) || 0;
+            
+            // 计算接收金额（考虑费用）
+            let fee = 0.005;
+            let receiveAmount = amount * 0.995; // 0.5% 费用
+            
+            // 不同链的费用不同
+            if (currentFromChain.id === 'eth' || currentToChain.id === 'eth') {
+                fee = 0.008;
+                receiveAmount = amount * 0.992;
+            } else if (currentFromChain.id === 'tte' && currentToChain.id === 'tte') {
+                fee = 0.001;
+                receiveAmount = amount * 0.999;
+            }
+            
+            // 更新时间估算
+            let time = currentLanguage === 'en' ? '~3 minutes' : '约3分钟';
+            if (currentFromChain.id === 'eth' || currentToChain.id === 'eth') {
+                time = currentLanguage === 'en' ? '~5 minutes' : '约5分钟';
+            } else if (currentFromChain.id === 'tte' || currentToChain.id === 'tte') {
+                time = currentLanguage === 'en' ? '~1 minute' : '约1分钟';
+            }
+            
+            // 更新接收金额显示
+            document.getElementById('receiveAmount').textContent = receiveAmount.toFixed(4);
+            
+            // 更新费用显示
+            const t = translations[currentLanguage];
+            document.getElementById('bridgeFee').textContent = `${fee.toFixed(3)} ETH`;
+            document.getElementById('bridgeTime').textContent = time;
+            document.getElementById('exchangeRate').textContent = `1 ${currentToken.symbol} = 1 ${currentToken.symbol}`;
+        }
+        
+        // 更新质押信息
+        function updateStakingInfo() {
+            // 这些值可以来自API，这里使用静态值
+            const t = translations[currentLanguage];
+            
+            // 更新质押统计
+            document.getElementById('totalStakedValue').textContent = '284.7M TTE';
+            document.getElementById('apyValue').textContent = '12.4%';
+            document.getElementById('validatorsValue').textContent = '1,247';
+            document.getElementById('rewardsValue').textContent = '12,845 TTE';
+            
+            // 更新锁定期
+            document.getElementById('lockPeriodValue').textContent = `${stakingDuration * 30} ${currentLanguage === 'en' ? 'Days' : '天'}`;
+            
+            // 更新预计奖励
+            updateStakingEstimate();
+        }
+        
+        // 更新预计质押奖励
+        function updateStakingEstimate() {
+            const amount = parseFloat(document.getElementById('stakeAmountInput').value) || 0;
+            const baseApy = 12.4; // 基础年化收益率
+            
+            // 计算预计年化收益率（考虑乘数）
+            const estApy = baseApy * stakingMultiplier;
+            
+            // 计算预计奖励
+            const estRewards = amount * (estApy / 100) * (stakingDuration / 12);
+            
+            // 更新显示
+            document.getElementById('estApyValue').textContent = `${estApy.toFixed(1)}%`;
+            document.getElementById('estRewardsValue').textContent = `${estRewards.toFixed(0)} TTE`;
+        }
+        
+        // 生成区块数据
+        function generateBlocks() {
+            const blocksGrid = document.getElementById('blocksGrid');
+            blocksGrid.innerHTML = '';
+            
+            const lang = currentLanguage;
+            
+            for (let i = 0; i < 6; i++) {
+                const blockNumber = blockHeight - i;
+                const timeAgo = Math.floor(Math.random() * 120) + 1;
+                const txCount = Math.floor(Math.random() * 200) + 50;
+                const validator = '0x' + Math.random().toString(16).substring(2, 10) + '...' + Math.random().toString(16).substring(2, 6);
+                const gasUsed = Math.floor(Math.random() * 8000000) + 2000000;
+                
+                const blockCard = document.createElement('div');
+                blockCard.className = 'block-card';
+                
+                blockCard.innerHTML = `
+                    <div class="block-header">
+                        <div class="block-number">#${blockNumber}</div>
+                        <div class="block-time">${timeAgo} ${lang === 'en' ? 'seconds ago' : '秒前'}</div>
+                    </div>
+                    <div class="block-details">
+                        <div class="block-row">
+                            <div class="block-label">${lang === 'en' ? 'Transactions' : '交易数'}</div>
+                            <div class="block-value">${txCount}</div>
+                        </div>
+                        <div class="block-row">
+                            <div class="block-label">${lang === 'en' ? 'Validator' : '验证者'}</div>
+                            <div class="block-value">${validator}</div>
+                        </div>
+                        <div class="block-row">
+                            <div class="block-label">${lang === 'en' ? 'Gas Used' : 'Gas使用量'}</div>
+                            <div class="block-value">${gasUsed.toLocaleString()}</div>
+                        </div>
+                    </div>
+                `;
+                
+                blocksGrid.appendChild(blockCard);
+            }
+        }
+        
+        // 处理桥接操作
+        function handleBridge() {
+            const t = translations[currentLanguage];
+            const bridgeBtn = document.getElementById('bridgeButton');
+            const bridgeBtnText = document.getElementById('bridgeButtonText');
+            
+            // 检查钱包连接
+            if (!isWalletConnected) {
+                showNotification(t.connectWalletFirst, 'error');
+                return;
+            }
+            
+            // 检查输入数量
+            const amount = parseFloat(document.getElementById('amountInput').value);
+            if (!amount || amount <= 0) {
+                showNotification(t.enterValidAmount, 'error');
+                return;
+            }
+            
+            // 检查余额
+            if (amount > currentToken.balance) {
+                showNotification(t.insufficientBalance, 'error');
+                return;
+            }
+            
+            // 模拟桥接过程
+            bridgeBtn.disabled = true;
+            bridgeBtn.innerHTML = `<i class="fas fa-spinner fa-spin"></i> ${t.processing}`;
+            
+            // 显示处理中通知
+            showNotification(t.processing, 'info');
+            
+            // 模拟处理时间
+            setTimeout(() => {
+                // 模拟成功
+                bridgeBtn.disabled = false;
+                bridgeBtn.innerHTML = `<i class="fas fa-link"></i> ${t.bridgeButtonTextConnected}`;
+                
+                // 显示成功通知
+                showNotification(t.bridgeSuccess, 'success');
+                
+                // 更新余额
+                currentToken.balance -= amount;
+                updateTokenUI();
+                
+                // 重置输入
+                document.getElementById('amountInput').value = '';
+                updateBridgeInfo();
+                
+                // 更新TVL
+                const currentTvl = parseFloat(document.getElementById('totalValueLocked').textContent.replace('$', '').replace('M', ''));
+                const newTvl = currentTvl + (amount / 1000000);
+                document.getElementById('totalValueLocked').textContent = `$${newTvl.toFixed(1)}M`;
+            }, 3000);
+        }
+        
+        // 处理质押操作
+        function handleStaking() {
+            const t = translations[currentLanguage];
+            const stakeSubmitBtn = document.getElementById('stakeSubmitBtn');
+            
+            // 检查钱包连接
+            if (!isWalletConnected) {
+                showNotification(t.connectWalletFirst, 'error');
+                return;
+            }
+            
+            // 检查输入数量
+            const amount = parseFloat(document.getElementById('stakeAmountInput').value);
+            if (!amount || amount <= 0) {
+                showNotification(t.enterValidAmount, 'error');
+                return;
+            }
+            
+            // 检查余额
+            if (amount > currentToken.balance) {
+                showNotification(t.insufficientBalance, 'error');
+                return;
+            }
+            
+            // 模拟质押过程
+            stakeSubmitBtn.disabled = true;
+            stakeSubmitBtn.innerHTML = `<i class="fas fa-spinner fa-spin"></i> ${t.processing}`;
+            
+            // 显示处理中通知
+            showNotification(t.processing, 'info');
+            
+            // 模拟处理时间
+            setTimeout(() => {
+                // 模拟成功
+                stakeSubmitBtn.disabled = false;
+                stakeSubmitBtn.innerHTML = `<i class="fas fa-lock"></i> ${t.stakeSubmitText}`;
+                
+                // 显示成功通知
+                showNotification(t.stakeSuccess, 'success');
+                
+                // 更新余额
+                currentToken.balance -= amount;
+                updateTokenUI();
+                
+                // 更新质押统计
+                const currentStaked = parseFloat(document.getElementById('totalStakedValue').textContent.replace('M', '').replace(' TTE', ''));
+                const newStaked = currentStaked + (amount / 1000000);
+                document.getElementById('totalStakedValue').textContent = `${newStaked.toFixed(1)}M TTE`;
+                
+                // 更新奖励
+                const currentRewards = parseFloat(document.getElementById('rewardsValue').textContent.replace(' TTE', ''));
+                const estRewards = parseFloat(document.getElementById('estRewardsValue').textContent.replace(' TTE', ''));
+                const newRewards = currentRewards + estRewards;
+                document.getElementById('rewardsValue').textContent = `${newRewards.toFixed(0)} TTE`;
+                
+                // 重置输入
+                document.getElementById('stakeAmountInput').value = '';
+                updateStakingEstimate();
+            }, 3000);
+        }
+        
+        // 显示通知
+        function showNotification(message, type) {
+            // 创建通知元素
+            const notification = document.createElement('div');
+            notification.style.position = 'fixed';
+            notification.style.top = '20px';
+            notification.style.right = '20px';
+            notification.style.padding = '1rem 1.5rem';
+            notification.style.borderRadius = '12px';
+            notification.style.color = 'white';
+            notification.style.fontWeight = '700';
+            notification.style.zIndex = '9999';
+            notification.style.boxShadow = '0 15px 40px rgba(0,0,0,0.4)';
+            notification.style.display = 'flex';
+            notification.style.alignItems = 'center';
+            notification.style.gap = '12px';
+            notification.style.transition = 'all 0.4s';
+            notification.style.transform = 'translateX(120%)';
+            notification.style.backdropFilter = 'blur(20px)';
+            
+            // 设置颜色
+            if (type === 'success') {
+                notification.style.background = 'rgba(0, 224, 160, 0.2)';
+                notification.style.border = '1px solid rgba(0, 224, 160, 0.3)';
+            } else if (type === 'error') {
+                notification.style.background = 'rgba(255, 92, 135, 0.2)';
+                notification.style.border = '1px solid rgba(255, 92, 135, 0.3)';
+            } else if (type === 'info') {
+                notification.style.background = 'rgba(123, 97, 255, 0.2)';
+                notification.style.border = '1px solid rgba(123, 97, 255, 0.3)';
+            }
+            
+            // 添加图标
+            let icon = 'info-circle';
+            if (type === 'success') icon = 'check-circle';
+            if (type === 'error') icon = 'exclamation-circle';
+            
+            notification.innerHTML = `<i class="fas fa-${icon}"></i> ${message}`;
+            
+            // 添加到页面
+            document.body.appendChild(notification);
+            
+            // 显示通知
+            setTimeout(() => {
+                notification.style.transform = 'translateX(0)';
+            }, 10);
+            
+            // 3秒后隐藏并移除通知
+            setTimeout(() => {
+                notification.style.transform = 'translateX(120%)';
+                setTimeout(() => {
+                    if (notification.parentNode) {
+                        notification.parentNode.removeChild(notification);
+                    }
+                }, 400);
+            }, 3000);
+        }
+    </script>
+</body>
+</html>
