@@ -1278,6 +1278,57 @@
             word-break: break-all;
         }
         
+        /* 区块浏览器 */
+        .explorer-card {
+            background: var(--card-bg);
+            border-radius: 20px;
+            border: 1px solid var(--border);
+            overflow: hidden;
+            margin-bottom: 3rem;
+            backdrop-filter: blur(10px);
+            box-shadow: var(--shadow);
+        }
+        
+        .blocks-table {
+            margin-top: 1.5rem;
+        }
+        
+        .block-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem;
+            border-bottom: 1px solid var(--border);
+            transition: var(--transition);
+            cursor: pointer;
+        }
+        
+        .block-row:hover {
+            background: rgba(108, 92, 231, 0.05);
+        }
+        
+        .block-info {
+            display: flex;
+            flex-direction: column;
+            gap: 0.3rem;
+        }
+        
+        .block-height {
+            font-weight: 700;
+            color: var(--accent);
+            font-family: 'JetBrains Mono', monospace;
+        }
+        
+        .block-txs {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+        
+        .block-time {
+            font-size: 0.9rem;
+            color: var(--text-tertiary);
+        }
+        
         /* 通知 */
         .notification {
             position: fixed;
@@ -1539,6 +1590,7 @@
                 <a href="#bridge" class="nav-link">Cross-Chain Bridge</a>
                 <a href="#staking" class="nav-link">Staking</a>
                 <a href="#transactions" class="nav-link">Transactions</a>
+                <a href="#explorer" class="nav-link">Block Explorer</a>
                 <a href="#docs" class="nav-link">Documentation</a>
             </div>
             
@@ -1652,6 +1704,7 @@
             <button class="tab-btn active" data-tab="bridge">Cross-Chain Bridge</button>
             <button class="tab-btn" data-tab="staking">TTE Staking</button>
             <button class="tab-btn" data-tab="transactions">Recent Transactions</button>
+            <button class="tab-btn" data-tab="explorer">Block Explorer</button>
         </div>
         
         <!-- 跨链桥卡片 -->
@@ -1958,6 +2011,80 @@
             </div>
         </div>
         
+        <!-- 区块浏览器 -->
+        <div class="tab-content" id="explorerTab" style="display: none;">
+            <div class="explorer-card">
+                <div class="card-header">
+                    <div class="card-title">
+                        <i class="fas fa-search"></i>
+                        <span id="explorerTitle">Block Explorer</span>
+                    </div>
+                    <div class="card-actions">
+                        <button class="action-btn" id="searchBlockBtn" title="Search Block">
+                            <i class="fas fa-search"></i>
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="bridge-content">
+                    <!-- 搜索区域 -->
+                    <div class="chain-section" style="margin-bottom: 1.5rem;">
+                        <div class="amount-input-container">
+                            <label class="amount-label" id="explorerSearchLabel">Search by Transaction Hash, Block Height or Address</label>
+                            <div class="amount-input-wrapper">
+                                <input type="text" class="amount-input" id="explorerSearch" placeholder="Enter hash, block number or address...">
+                                <button class="wallet-btn" id="explorerSearchBtn" style="min-width: 120px;">
+                                    <i class="fas fa-search"></i>
+                                    <span id="searchBtnText">Search</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 区块链信息 -->
+                    <div class="bridge-info">
+                        <div class="info-row">
+                            <div class="info-label">
+                                <i class="fas fa-cube"></i>
+                                <span id="latestBlockLabel">Latest Block</span>
+                            </div>
+                            <div class="info-value" id="latestBlock">4,827,419</div>
+                        </div>
+                        <div class="info-row">
+                            <div class="info-label">
+                                <i class="fas fa-clock"></i>
+                                <span id="blockTimeLabel">Block Time</span>
+                            </div>
+                            <div class="info-value" id="blockTimeValue">2.5 seconds</div>
+                        </div>
+                        <div class="info-row">
+                            <div class="info-label">
+                                <i class="fas fa-gas-pump"></i>
+                                <span id="gasPriceLabel">Average Gas Price</span>
+                            </div>
+                            <div class="info-value" id="gasPriceValue">0.00000005 ETH</div>
+                        </div>
+                    </div>
+                    
+                    <!-- 最近区块 -->
+                    <div class="transactions-section" style="margin-top: 2rem;">
+                        <div class="transactions-header">
+                            <div class="card-title">
+                                <i class="fas fa-cubes"></i>
+                                <span id="recentBlocksLabel">Recent Blocks</span>
+                            </div>
+                        </div>
+                        
+                        <div class="transactions-content">
+                            <div class="blocks-table" id="blocksTable">
+                                <!-- 区块数据将通过JavaScript动态生成 -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
         <!-- 页脚 -->
         <footer class="footer">
             <div class="footer-grid">
@@ -2106,6 +2233,13 @@
                 estRewardsLabel: "Estimated Rewards",
                 stakeSubmitText: "Stake TTE",
                 transactionsTitle: "Recent Transactions",
+                explorerTitle: "Block Explorer",
+                explorerSearchLabel: "Search by Transaction Hash, Block Height or Address",
+                searchBtnText: "Search",
+                latestBlockLabel: "Latest Block",
+                blockTimeLabel: "Block Time",
+                gasPriceLabel: "Average Gas Price",
+                recentBlocksLabel: "Recent Blocks",
                 footerDescription: "A high-performance Layer 1 blockchain network with native RWA integration and cross-chain interoperability. Built for the future of decentralized finance and real-world asset tokenization.",
                 networkHeading: "Network",
                 footerExplorer: "Block Explorer",
@@ -2129,13 +2263,16 @@
                 success: "Success!",
                 bridgeSuccess: "Bridge transaction completed successfully",
                 stakeSuccess: "TTE staked successfully",
+                claimSuccess: "Rewards claimed successfully",
                 error: "Error",
                 connectWalletFirst: "Please connect your wallet first",
                 enterValidAmount: "Please enter a valid amount",
                 insufficientBalance: "Insufficient balance",
+                noRewards: "No rewards to claim",
                 chainModalTitle: "Select Network",
                 tokenModalTitle: "Select Token",
-                txDetailModalTitle: "Transaction Details"
+                txDetailModalTitle: "Transaction Details",
+                searchPlaceholder: "Enter hash, block number or address..."
             },
             zh: {
                 mainTitle: "企业级区块链平台",
@@ -2164,6 +2301,13 @@
                 estRewardsLabel: "预计奖励",
                 stakeSubmitText: "质押TTE",
                 transactionsTitle: "最近交易",
+                explorerTitle: "区块浏览器",
+                explorerSearchLabel: "搜索交易哈希、区块高度或地址",
+                searchBtnText: "搜索",
+                latestBlockLabel: "最新区块",
+                blockTimeLabel: "出块时间",
+                gasPriceLabel: "平均Gas价格",
+                recentBlocksLabel: "最近区块",
                 footerDescription: "一个具有原生RWA集成和跨链互操作性的高性能Layer 1区块链网络。为去中心化金融和现实世界资产代币化的未来而构建。",
                 networkHeading: "网络",
                 footerExplorer: "区块浏览器",
@@ -2187,13 +2331,16 @@
                 success: "成功!",
                 bridgeSuccess: "跨链交易已完成",
                 stakeSuccess: "TTE质押成功",
+                claimSuccess: "奖励领取成功",
                 error: "错误",
                 connectWalletFirst: "请先连接钱包",
                 enterValidAmount: "请输入有效数量",
                 insufficientBalance: "余额不足",
+                noRewards: "没有可领取的奖励",
                 chainModalTitle: "选择网络",
                 tokenModalTitle: "选择代币",
-                txDetailModalTitle: "交易详情"
+                txDetailModalTitle: "交易详情",
+                searchPlaceholder: "输入哈希、区块号或地址..."
             }
         };
         
@@ -2278,6 +2425,45 @@
             }
         ];
         
+        // 区块数据
+        const blocks = [
+            { height: 4827419, txs: 42, time: '12 seconds ago', validator: 'Validator #1247' },
+            { height: 4827418, txs: 38, time: '25 seconds ago', validator: 'Validator #0983' },
+            { height: 4827417, txs: 51, time: '38 seconds ago', validator: 'Validator #0456' },
+            { height: 4827416, txs: 29, time: '50 seconds ago', validator: 'Validator #2019' },
+            { height: 4827415, txs: 47, time: '1 minute ago', validator: 'Validator #1782' },
+            { height: 4827414, txs: 33, time: '1 minute ago', validator: 'Validator #1123' },
+            { height: 4827413, txs: 56, time: '2 minutes ago', validator: 'Validator #1567' },
+            { height: 4827412, txs: 41, time: '2 minutes ago', validator: 'Validator #0894' }
+        ];
+        
+        // 质押历史数据
+        let stakingHistory = [
+            {
+                id: 1,
+                amount: 100,
+                duration: 30,
+                startDate: '2024-01-15',
+                endDate: '2024-02-14',
+                status: 'active',
+                rewards: 12.4,
+                apy: 12.4
+            },
+            {
+                id: 2,
+                amount: 50,
+                duration: 90,
+                startDate: '2023-12-01',
+                endDate: '2024-02-29',
+                status: 'active',
+                rewards: 18.6,
+                apy: 14.8
+            }
+        ];
+        
+        // 跨链历史数据
+        let bridgeHistory = [];
+        
         // 应用状态
         let isWalletConnected = false;
         let walletAddress = null;
@@ -2303,6 +2489,7 @@
             updateBridgeInfo();
             updateStakingInfo();
             generateTransactions();
+            generateBlocksTable();
             
             // 语言切换
             const langTrigger = document.getElementById('langTrigger');
@@ -2341,6 +2528,35 @@
                 }
             });
             
+            // 导航链接点击事件
+            document.querySelectorAll('.nav-link').forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const targetId = this.getAttribute('href').substring(1);
+                    
+                    // 如果是文档链接，显示消息
+                    if (targetId === 'docs') {
+                        showNotification(currentLanguage === 'en' 
+                            ? 'Documentation page would open in a new tab' 
+                            : '文档页面将在新标签页打开', 'info');
+                        return;
+                    }
+                    
+                    // 找到对应的标签页按钮
+                    const tabBtn = document.querySelector(`.tab-btn[data-tab="${targetId}"]`);
+                    if (tabBtn) {
+                        // 模拟点击对应的标签页
+                        tabBtn.click();
+                        
+                        // 更新导航链接激活状态
+                        document.querySelectorAll('.nav-link').forEach(navLink => {
+                            navLink.classList.remove('active');
+                        });
+                        this.classList.add('active');
+                    }
+                });
+            });
+            
             // 标签页切换
             const tabBtns = document.querySelectorAll('.tab-btn');
             const tabContents = document.querySelectorAll('.tab-content');
@@ -2359,6 +2575,14 @@
                     });
                     
                     document.getElementById(`${tabId}Tab`).style.display = 'block';
+                    
+                    // 更新导航链接激活状态
+                    document.querySelectorAll('.nav-link').forEach(navLink => {
+                        navLink.classList.remove('active');
+                        if (navLink.getAttribute('href') === `#${tabId}`) {
+                            navLink.classList.add('active');
+                        }
+                    });
                     
                     // 滚动到顶部
                     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -2399,7 +2623,7 @@
                     bridgeButton.disabled = true;
                     
                     // 显示断开消息
-                    showNotification('Wallet disconnected', 'info');
+                    showNotification(currentLanguage === 'en' ? 'Wallet disconnected' : '钱包已断开', 'info');
                 }
             });
             
@@ -2523,21 +2747,43 @@
                 showNotification(currentLanguage === 'en' ? 'Transactions refreshed' : '交易已刷新', 'success');
             });
             
+            // 区块浏览器搜索按钮
+            document.getElementById('explorerSearchBtn').addEventListener('click', function() {
+                const searchTerm = document.getElementById('explorerSearch').value.trim();
+                if (searchTerm) {
+                    handleBlockExplorerSearch(searchTerm);
+                } else {
+                    showNotification(
+                        currentLanguage === 'en' 
+                            ? 'Please enter a search term' 
+                            : '请输入搜索内容',
+                        'error'
+                    );
+                }
+            });
+            
+            // 区块浏览器搜索输入框回车键支持
+            document.getElementById('explorerSearch').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    document.getElementById('explorerSearchBtn').click();
+                }
+            });
+            
             // 设置和历史按钮
             document.getElementById('settingsBtn').addEventListener('click', function() {
                 showNotification(currentLanguage === 'en' ? 'Settings modal would open here' : '设置模态框将在此处打开', 'info');
             });
             
             document.getElementById('historyBtn').addEventListener('click', function() {
-                showNotification(currentLanguage === 'en' ? 'Transaction history modal would open here' : '交易历史模态框将在此处打开', 'info');
+                openBridgeHistoryModal();
             });
             
             document.getElementById('stakingHistoryBtn').addEventListener('click', function() {
-                showNotification(currentLanguage === 'en' ? 'Staking history modal would open here' : '质押历史模态框将在此处打开', 'info');
+                openStakingHistoryModal();
             });
             
             document.getElementById('rewardsBtn').addEventListener('click', function() {
-                showNotification(currentLanguage === 'en' ? 'Rewards modal would open here' : '奖励模态框将在此处打开', 'info');
+                claimRewards();
             });
             
             // 模态框关闭按钮
@@ -2555,12 +2801,16 @@
             // 首页链接
             document.getElementById('homeLink').addEventListener('click', function() {
                 window.scrollTo({ top: 0, behavior: 'smooth' });
+                
+                // 激活仪表板标签页
+                document.querySelector('.tab-btn[data-tab="bridge"]').click();
             });
             
             // 自动更新区块高度
             setInterval(() => {
                 blockHeight++;
                 document.getElementById('blockHeight').textContent = blockHeight.toLocaleString();
+                document.getElementById('latestBlock').textContent = blockHeight.toLocaleString();
                 
                 // 随机增加交易数
                 totalTxs += Math.floor(Math.random() * 100);
@@ -2598,6 +2848,23 @@
                     const newTvl = currentTvl + (Math.random() * 2 - 1);
                     document.getElementById('totalValueLocked').textContent = `$${newTvl.toFixed(1)}M`;
                 }
+                
+                // 更新区块列表（每10秒添加一个新区块）
+                if (blocks.length > 0) {
+                    const newBlock = {
+                        height: blockHeight,
+                        txs: Math.floor(Math.random() * 30) + 20,
+                        time: currentLanguage === 'en' ? 'Just now' : '刚刚',
+                        validator: `Validator #${Math.floor(Math.random() * 2000)}`
+                    };
+                    blocks.unshift(newBlock);
+                    if (blocks.length > 8) blocks.pop();
+                    
+                    // 如果当前显示的是区块浏览器，更新表格
+                    if (document.getElementById('explorerTab').style.display !== 'none') {
+                        generateBlocksTable();
+                    }
+                }
             }, 10000);
             
             // 点击统计卡片
@@ -2627,6 +2894,12 @@
                 }
             }
             
+            // 更新搜索框占位符
+            const explorerSearch = document.getElementById('explorerSearch');
+            if (explorerSearch) {
+                explorerSearch.placeholder = t.searchPlaceholder;
+            }
+            
             // 更新链和代币名称
             updateChainUI();
             updateTokenUI();
@@ -2636,6 +2909,9 @@
             
             // 更新交易表格
             generateTransactions();
+            
+            // 更新区块表格
+            generateBlocksTable();
         }
         
         // 更新桥接按钮文本
@@ -2824,6 +3100,41 @@
             });
         }
         
+        // 生成区块表格
+        function generateBlocksTable() {
+            const blocksTable = document.getElementById('blocksTable');
+            blocksTable.innerHTML = '';
+            
+            const lang = currentLanguage;
+            
+            blocks.forEach((block, index) => {
+                const blockRow = document.createElement('div');
+                blockRow.className = 'block-row';
+                
+                blockRow.innerHTML = `
+                    <div class="block-info">
+                        <div class="block-height">#${block.height.toLocaleString()}</div>
+                        <div class="block-txs">${block.txs} ${lang === 'en' ? 'transactions' : '笔交易'}</div>
+                    </div>
+                    <div class="block-info">
+                        <div class="block-time">${block.time}</div>
+                        <div class="block-txs">${block.validator}</div>
+                    </div>
+                `;
+                
+                blockRow.addEventListener('click', function() {
+                    showNotification(
+                        lang === 'en' 
+                            ? `Block #${block.height} details would open here` 
+                            : `区块 #${block.height} 详情将在此处打开`,
+                        'info'
+                    );
+                });
+                
+                blocksTable.appendChild(blockRow);
+            });
+        }
+        
         // 打开链选择模态框
         function openChainModal(target) {
             currentModal = 'chain';
@@ -2872,7 +3183,7 @@
                     showNotification(
                         currentLanguage === 'en'
                             ? `Chain changed to ${chain.name[lang]}`
-                            : `链已切换为${chain.name[zh]}`,
+                            : `链已切换为${chain.name[lang]}`,
                         'success'
                     );
                 });
@@ -3010,12 +3321,280 @@
             document.body.style.overflow = 'hidden';
         }
         
+        // 打开跨链历史模态框
+        function openBridgeHistoryModal() {
+            currentModal = 'bridgeHistory';
+            const modal = document.createElement('div');
+            modal.className = 'modal active';
+            modal.id = 'bridgeHistoryModal';
+            
+            const lang = currentLanguage;
+            
+            modal.innerHTML = `
+                <div class="modal-content" style="max-width: 800px;">
+                    <div class="modal-header">
+                        <div class="modal-title">${lang === 'en' ? 'Bridge Transaction History' : '跨链交易历史'}</div>
+                        <button class="modal-close" onclick="closeModal()">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        ${bridgeHistory.length === 0 
+                            ? `<div style="text-align: center; padding: 2rem; color: var(--text-secondary);">
+                                <i class="fas fa-history" style="font-size: 3rem; margin-bottom: 1rem;"></i>
+                                <p>${lang === 'en' ? 'No bridge transactions yet' : '暂无跨链交易记录'}</p>
+                            </div>`
+                            : `<div class="transactions-table" style="overflow-x: auto;">
+                                <table style="width: 100%;">
+                                    <thead>
+                                        <tr>
+                                            <th>${lang === 'en' ? 'Date' : '日期'}</th>
+                                            <th>${lang === 'en' ? 'From' : '来源'}</th>
+                                            <th>${lang === 'en' ? 'To' : '目标'}</th>
+                                            <th>${lang === 'en' ? 'Amount' : '数量'}</th>
+                                            <th>${lang === 'en' ? 'Status' : '状态'}</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="bridgeHistoryTable"></tbody>
+                                </table>
+                            </div>`
+                        }
+                    </div>
+                </div>
+            `;
+            
+            document.body.appendChild(modal);
+            document.body.style.overflow = 'hidden';
+            
+            // 如果历史记录存在，生成表格
+            if (bridgeHistory.length > 0) {
+                generateBridgeHistoryTable();
+            }
+            
+            // 添加关闭按钮事件
+            modal.querySelector('.modal-close').addEventListener('click', closeModal);
+        }
+        
+        // 生成跨链历史表格
+        function generateBridgeHistoryTable() {
+            const table = document.getElementById('bridgeHistoryTable');
+            if (!table) return;
+            
+            table.innerHTML = '';
+            const lang = currentLanguage;
+            
+            bridgeHistory.forEach(record => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${record.date}</td>
+                    <td>${record.from}</td>
+                    <td>${record.to}</td>
+                    <td>${record.amount}</td>
+                    <td><span class="tx-status tx-success">${record.status}</span></td>
+                `;
+                table.appendChild(row);
+            });
+        }
+        
+        // 打开质押历史模态框
+        function openStakingHistoryModal() {
+            currentModal = 'stakingHistory';
+            const modal = document.createElement('div');
+            modal.className = 'modal active';
+            modal.id = 'stakingHistoryModal';
+            
+            const lang = currentLanguage;
+            
+            modal.innerHTML = `
+                <div class="modal-content" style="max-width: 800px;">
+                    <div class="modal-header">
+                        <div class="modal-title">${lang === 'en' ? 'Staking History' : '质押历史'}</div>
+                        <button class="modal-close" onclick="closeModal()">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="transactions-table" style="overflow-x: auto;">
+                            <table style="width: 100%;">
+                                <thead>
+                                    <tr>
+                                        <th>${lang === 'en' ? 'Amount' : '数量'}</th>
+                                        <th>${lang === 'en' ? 'Duration' : '期限'}</th>
+                                        <th>${lang === 'en' ? 'Start Date' : '开始日期'}</th>
+                                        <th>${lang === 'en' ? 'End Date' : '结束日期'}</th>
+                                        <th>${lang === 'en' ? 'Rewards' : '奖励'}</th>
+                                        <th>${lang === 'en' ? 'Status' : '状态'}</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="stakingHistoryTable"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            document.body.appendChild(modal);
+            document.body.style.overflow = 'hidden';
+            
+            // 生成质押历史表格
+            generateStakingHistoryTable();
+            
+            // 添加关闭按钮事件
+            modal.querySelector('.modal-close').addEventListener('click', closeModal);
+        }
+        
+        // 生成质押历史表格
+        function generateStakingHistoryTable() {
+            const table = document.getElementById('stakingHistoryTable');
+            if (!table) return;
+            
+            table.innerHTML = '';
+            const lang = currentLanguage;
+            
+            stakingHistory.forEach(stake => {
+                const row = document.createElement('tr');
+                
+                // 状态文本
+                let statusText = stake.status === 'active' 
+                    ? (lang === 'en' ? 'Active' : '进行中')
+                    : (lang === 'en' ? 'Completed' : '已完成');
+                
+                row.innerHTML = `
+                    <td>${stake.amount} TTE</td>
+                    <td>${stake.duration} ${lang === 'en' ? 'days' : '天'}</td>
+                    <td>${stake.startDate}</td>
+                    <td>${stake.endDate}</td>
+                    <td>${stake.rewards} TTE</td>
+                    <td><span class="tx-status ${stake.status === 'active' ? 'tx-success' : 'tx-pending'}">${statusText}</span></td>
+                `;
+                
+                table.appendChild(row);
+            });
+        }
+        
+        // 区块浏览器搜索处理
+        function handleBlockExplorerSearch(searchTerm) {
+            const lang = currentLanguage;
+            
+            // 模拟搜索过程
+            showNotification(
+                lang === 'en' 
+                    ? `Searching for "${searchTerm}"...` 
+                    : `正在搜索 "${searchTerm}"...`,
+                'info'
+            );
+            
+            // 模拟搜索结果
+            setTimeout(() => {
+                // 检查是否是区块高度
+                if (/^\d+$/.test(searchTerm)) {
+                    const blockNum = parseInt(searchTerm);
+                    if (blockNum <= blockHeight) {
+                        showNotification(
+                            lang === 'en' 
+                                ? `Found block #${blockNum.toLocaleString()}` 
+                                : `找到区块 #${blockNum.toLocaleString()}`,
+                            'success'
+                        );
+                    } else {
+                        showNotification(
+                            lang === 'en' 
+                                ? `Block #${blockNum.toLocaleString()} not found` 
+                                : `未找到区块 #${blockNum.toLocaleString()}`,
+                            'error'
+                        );
+                    }
+                }
+                // 检查是否是地址
+                else if (searchTerm.startsWith('0x') && searchTerm.length === 42) {
+                    showNotification(
+                        lang === 'en' 
+                            ? `Found address ${searchTerm.substring(0, 8)}...` 
+                            : `找到地址 ${searchTerm.substring(0, 8)}...`,
+                        'success'
+                    );
+                }
+                // 检查是否是交易哈希
+                else if (searchTerm.startsWith('0x') && searchTerm.length === 66) {
+                    showNotification(
+                        lang === 'en' 
+                            ? `Found transaction ${searchTerm.substring(0, 10)}...` 
+                            : `找到交易 ${searchTerm.substring(0, 10)}...`,
+                        'success'
+                    );
+                }
+                // 其他搜索
+                else {
+                    showNotification(
+                        lang === 'en' 
+                            ? `No results found for "${searchTerm}"` 
+                            : `未找到 "${searchTerm}" 的搜索结果`,
+                        'error'
+                    );
+                }
+            }, 1000);
+        }
+        
+        // 领取奖励功能
+        function claimRewards() {
+            const t = translations[currentLanguage];
+            
+            if (!isWalletConnected) {
+                showNotification(t.connectWalletFirst, 'error');
+                return;
+            }
+            
+            const rewards = parseFloat(document.getElementById('rewardsValue').textContent.replace(' TTE', ''));
+            
+            if (rewards <= 0) {
+                showNotification(t.noRewards, 'info');
+                return;
+            }
+            
+            // 模拟领取过程
+            const rewardsBtn = document.getElementById('rewardsBtn');
+            rewardsBtn.disabled = true;
+            rewardsBtn.innerHTML = `<i class="fas fa-spinner fa-spin"></i>`;
+            
+            showNotification(
+                currentLanguage === 'en' 
+                    ? `Claiming ${rewards} TTE rewards...` 
+                    : `正在领取 ${rewards} TTE 奖励...`,
+                'info'
+            );
+            
+            setTimeout(() => {
+                // 重置奖励
+                document.getElementById('rewardsValue').textContent = '0 TTE';
+                
+                // 更新用户余额
+                currentToken.balance += rewards;
+                updateTokenUI();
+                
+                // 重置按钮状态
+                rewardsBtn.disabled = false;
+                rewardsBtn.innerHTML = `<i class="fas fa-gift"></i>`;
+                
+                showNotification(t.claimSuccess, 'success');
+            }, 2000);
+        }
+        
         // 关闭模态框
         function closeModal() {
             document.querySelectorAll('.modal').forEach(modal => {
                 modal.classList.remove('active');
             });
             document.body.style.overflow = 'auto';
+            
+            // 移除动态创建的模态框
+            const dynamicModals = ['bridgeHistoryModal', 'stakingHistoryModal'];
+            dynamicModals.forEach(modalId => {
+                const modal = document.getElementById(modalId);
+                if (modal) {
+                    modal.remove();
+                }
+            });
+            
             currentModal = null;
         }
         
@@ -3063,6 +3642,16 @@
                 // 更新余额
                 currentToken.balance -= amount;
                 updateTokenUI();
+                
+                // 添加到桥接历史
+                const bridgeRecord = {
+                    date: new Date().toLocaleString(),
+                    from: currentFromChain.name[currentLanguage],
+                    to: currentToChain.name[currentLanguage],
+                    amount: amount.toFixed(2) + ' ' + currentToken.symbol,
+                    status: 'Completed'
+                };
+                bridgeHistory.unshift(bridgeRecord);
                 
                 // 重置输入
                 document.getElementById('amountInput').value = '';
@@ -3134,6 +3723,19 @@
                 // 更新余额
                 currentToken.balance -= amount;
                 updateTokenUI();
+                
+                // 添加到质押历史
+                const newStake = {
+                    id: stakingHistory.length + 1,
+                    amount: amount,
+                    duration: stakingDuration * 30,
+                    startDate: new Date().toISOString().split('T')[0],
+                    endDate: new Date(Date.now() + stakingDuration * 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+                    status: 'active',
+                    rewards: parseFloat(document.getElementById('estRewardsValue').textContent.replace(' TTE', '')),
+                    apy: parseFloat(document.getElementById('estApyValue').textContent.replace('%', ''))
+                };
+                stakingHistory.unshift(newStake);
                 
                 // 更新质押统计
                 const currentStaked = parseFloat(document.getElementById('totalStakedValue').textContent.replace('M', '').replace(' TTE', ''));
